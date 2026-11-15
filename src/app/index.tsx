@@ -1,5 +1,6 @@
-
+import { Link } from 'expo-router';
 import {
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -172,25 +173,22 @@ export default function HomeScreen() {
             </Text>
           </View>
         </View>
+        <Link href="/add-record" asChild>
+          <Pressable style={styles.addRecordButton}>
+            <Text style={styles.addRecordButtonText}>
+              + Add Health Record
+            </Text>
+          </Pressable>
+        </Link>
+        <Link href="/records" asChild>
+          <Pressable style={styles.viewRecordsButton}>
+            <Text style={styles.viewRecordsButtonText}>
+              View Health Records
+            </Text>
+          </Pressable>
+        </Link>
       </ScrollView>
 
-      {}
-      <View style={styles.bottomNavigation}>
-        <View style={styles.navItem}>
-          <Text style={styles.activeNavIcon}>⌂</Text>
-          <Text style={styles.activeNavText}>Home</Text>
-        </View>
-
-        <View style={styles.navItem}>
-          <Text style={styles.navIcon}>▤</Text>
-          <Text style={styles.navText}>Records</Text>
-        </View>
-
-        <View style={styles.navItem}>
-          <Text style={styles.navIcon}>◎</Text>
-          <Text style={styles.navText}>Goals</Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 }
@@ -413,41 +411,35 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  bottomNavigation: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#E8EDF5',
+  addRecordButton: {
+  backgroundColor: '#2563EB',
+  padding: 17,
+  borderRadius: 15,
+  alignItems: 'center',
+  marginTop: 15,
+  marginBottom: 20,
   },
 
-  navItem: {
-    alignItems: 'center',
-    flex: 1,
-  },
+  addRecordButtonText: {
+  color: '#FFFFFF',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
 
-  activeNavIcon: {
-    fontSize: 25,
-    color: '#2563EB',
-  },
+  viewRecordsButton: {
+  backgroundColor: '#FFFFFF',
+  borderWidth: 1,
+  borderColor: '#2563EB',
+  padding: 17,
+  borderRadius: 15,
+  alignItems: 'center',
+  marginTop: 10,
+  marginBottom: 20,
+},
 
-  navIcon: {
-    fontSize: 23,
-    color: '#94A3B8',
-  },
-
-  activeNavText: {
-    fontSize: 11,
-    color: '#2563EB',
-    fontWeight: 'bold',
-    marginTop: 3,
-  },
-
-  navText: {
-    fontSize: 11,
-    color: '#94A3B8',
-    marginTop: 3,
-  },
+viewRecordsButtonText: {
+  color: '#2563EB',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
 });
