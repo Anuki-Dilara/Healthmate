@@ -79,13 +79,13 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F5F7FB" />
+      <StatusBar barStyle="dark-content"/>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <View style={styles.brandSection}>
             <View style={styles.logo}>
@@ -103,7 +103,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Welcome section */}
+        {}
         <View style={styles.welcomeSection}>
           <Text style={styles.greeting}>{greeting}</Text>
 
@@ -114,7 +114,7 @@ export default function HomeScreen() {
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
 
-        {/* Daily activities */}
+        {}
         <View style={styles.sectionHeading}>
           <Text style={styles.sectionTitle}>Today's Activity</Text>
           <Text style={styles.sectionSubtitle}>
@@ -122,7 +122,7 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Steps and water cards */}
+        {}
         <View style={styles.cardRow}>
           <View style={styles.cardColumn}>
             <MetricCard
@@ -147,7 +147,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Calories card */}
+        {}
         <MetricCard
           title="Calories Burned"
           value="320 kcal"
@@ -158,7 +158,7 @@ export default function HomeScreen() {
           wide
         />
 
-        {/* Motivation card */}
+        {}
         <View style={styles.motivationCard}>
           <Text style={styles.motivationIcon}>💡</Text>
 
@@ -174,7 +174,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {/* Bottom navigation preview */}
+      {}
       <View style={styles.bottomNavigation}>
         <View style={styles.navItem}>
           <Text style={styles.activeNavIcon}>⌂</Text>
