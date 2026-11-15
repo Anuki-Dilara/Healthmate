@@ -1,98 +1,453 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+interface MetricCardProps {
+  title: string;
+  value: string;
+  detail: string;
+  progress: number;
+  icon: string;
+  color: string;
+  wide?: boolean;
+}
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+function MetricCard({
+  title,
+  value,
+  detail,
+  progress,
+  icon,
+  color,
+  wide = false,
+}: MetricCardProps) {
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <View style={[styles.metricCard, wide && styles.wideCard]}>
+      <View style={styles.cardHeading}>
+        <View style={[styles.iconBox, { backgroundColor: color + '18' }]}>
+          <Text style={styles.metricIcon}>{icon}</Text>
+        </View>
+
+        {wide && <Text style={styles.wideTitle}>{title}</Text>}
+      </View>
+
+      {!wide && <Text style={styles.metricTitle}>{title}</Text>}
+
+      <Text style={styles.metricValue}>{value}</Text>
+
+      <View style={styles.progressBackground}>
+        <View
+          style={[
+            styles.progressFill,
+            {
+              width: `${progress * 100}%`,
+              backgroundColor: color,
+            },
+          ]}
+        />
+      </View>
+
+      <Text style={styles.metricDetail}>{detail}</Text>
+    </View>
   );
 }
 
 export default function HomeScreen() {
+  const date = new Date();
+
+  const formattedDate = date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const hour = date.getHours();
+
+  const greeting =
+    hour < 12
+      ? 'Good morning!'
+      : hour < 17
+        ? 'Good afternoon!'
+        : 'Good evening!';
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F7FB" />
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.brandSection}>
+            <View style={styles.logo}>
+              <Text style={styles.logoText}>♥</Text>
+            </View>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+            <View>
+              <Text style={styles.appName}>HealthMate</Text>
+              <Text style={styles.tagline}>YOUR DAILY WELLNESS</Text>
+            </View>
+          </View>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+          <View style={styles.profileCircle}>
+            <Text style={styles.profileText}>A</Text>
+          </View>
+        </View>
+
+        {/* Welcome section */}
+        <View style={styles.welcomeSection}>
+          <Text style={styles.greeting}>{greeting}</Text>
+
+          <Text style={styles.subtitle}>
+            Take a look at your daily health progress.
+          </Text>
+
+          <Text style={styles.date}>{formattedDate}</Text>
+        </View>
+
+        {/* Daily activities */}
+        <View style={styles.sectionHeading}>
+          <Text style={styles.sectionTitle}>Today's Activity</Text>
+          <Text style={styles.sectionSubtitle}>
+            Your daily health overview
+          </Text>
+        </View>
+
+        {/* Steps and water cards */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardColumn}>
+            <MetricCard
+              title="Steps"
+              value="5,280"
+              detail="of 8,000 steps"
+              progress={0.66}
+              icon="👟"
+              color="#2563EB"
+            />
+          </View>
+
+          <View style={styles.cardColumn}>
+            <MetricCard
+              title="Water Intake"
+              value="1,250"
+              detail="of 2,000 ml"
+              progress={0.625}
+              icon="💧"
+              color="#0891B2"
+            />
+          </View>
+        </View>
+
+        {/* Calories card */}
+        <MetricCard
+          title="Calories Burned"
+          value="320 kcal"
+          detail="of 500 kcal daily goal"
+          progress={0.64}
+          icon="🔥"
+          color="#EA580C"
+          wide
+        />
+
+        {/* Motivation card */}
+        <View style={styles.motivationCard}>
+          <Text style={styles.motivationIcon}>💡</Text>
+
+          <View style={styles.motivationContent}>
+            <Text style={styles.motivationTitle}>
+              Daily Motivation
+            </Text>
+
+            <Text style={styles.motivationText}>
+              Small healthy habits lead to big changes. Keep moving!
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Bottom navigation preview */}
+      <View style={styles.bottomNavigation}>
+        <View style={styles.navItem}>
+          <Text style={styles.activeNavIcon}>⌂</Text>
+          <Text style={styles.activeNavText}>Home</Text>
+        </View>
+
+        <View style={styles.navItem}>
+          <Text style={styles.navIcon}>▤</Text>
+          <Text style={styles.navText}>Records</Text>
+        </View>
+
+        <View style={styles.navItem}>
+          <Text style={styles.navIcon}>◎</Text>
+          <Text style={styles.navText}>Goals</Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#F5F7FB',
+  },
+
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 25,
+  },
+
+  header: {
     flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    justifyContent: 'space-between',
+    marginBottom: 30,
   },
-  heroSection: {
+
+  brandSection: {
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  logo: {
+    width: 48,
+    height: 48,
+    borderRadius: 15,
+    backgroundColor: '#2563EB',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+
+  logoText: {
+    color: '#FFFFFF',
+    fontSize: 28,
+  },
+
+  appName: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#172554',
+  },
+
+  tagline: {
+    fontSize: 10,
+    color: '#64748B',
+    letterSpacing: 1.2,
+    marginTop: 3,
+  },
+
+  profileCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#E8EEFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  profileText: {
+    color: '#2563EB',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+
+  welcomeSection: {
+    marginBottom: 28,
+  },
+
+  greeting: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#172554',
+    marginBottom: 7,
+  },
+
+  subtitle: {
+    fontSize: 14,
+    color: '#64748B',
+  },
+
+  date: {
+    fontSize: 13,
+    color: '#2563EB',
+    fontWeight: '600',
+    marginTop: 9,
+  },
+
+  sectionHeading: {
+    marginBottom: 17,
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#172554',
+  },
+
+  sectionSubtitle: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 5,
+  },
+
+  cardRow: {
+    flexDirection: 'row',
+    marginBottom: 14,
+  },
+
+  cardColumn: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
   },
-  title: {
-    textAlign: 'center',
+
+  metricCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E8EDF5',
+    marginBottom: 14,
   },
-  code: {
-    textTransform: 'uppercase',
+
+  wideCard: {
+    flex: 0,
+    width: '100%',
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  cardHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  iconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  metricIcon: {
+    fontSize: 20,
+  },
+
+  wideTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#475569',
+    marginLeft: 12,
+  },
+
+  metricTitle: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 14,
+  },
+
+  metricValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#172554',
+    marginTop: 9,
+    marginBottom: 14,
+  },
+
+  progressBackground: {
+    height: 7,
+    backgroundColor: '#F0F2F6',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+
+  progressFill: {
+    height: '100%',
+    borderRadius: 10,
+  },
+
+  metricDetail: {
+    fontSize: 11,
+    color: '#64748B',
+    marginTop: 9,
+  },
+
+  motivationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8EEFF',
+    borderRadius: 20,
+    padding: 19,
+    marginTop: 9,
+    marginBottom: 15,
+  },
+
+  motivationIcon: {
+    fontSize: 30,
+    marginRight: 14,
+  },
+
+  motivationContent: {
+    flex: 1,
+  },
+
+  motivationTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#172554',
+    marginBottom: 5,
+  },
+
+  motivationText: {
+    fontSize: 13,
+    color: '#475569',
+    lineHeight: 20,
+  },
+
+  bottomNavigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E8EDF5',
+  },
+
+  navItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  activeNavIcon: {
+    fontSize: 25,
+    color: '#2563EB',
+  },
+
+  navIcon: {
+    fontSize: 23,
+    color: '#94A3B8',
+  },
+
+  activeNavText: {
+    fontSize: 11,
+    color: '#2563EB',
+    fontWeight: 'bold',
+    marginTop: 3,
+  },
+
+  navText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 3,
   },
 });
