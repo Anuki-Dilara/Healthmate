@@ -2,27 +2,26 @@
 import { useCallback, useState } from 'react';
 
 import {
-    Alert,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-    deleteHealthRecord,
-    getAllHealthRecords,
-    searchHealthRecordsByDate,
-} from '../database/healthDatabase';
+  deleteHealthRecord,
+  getAllHealthRecords,
+  searchHealthRecordsByDate,
+} from '@/database/healthDatabase';
 
-import type { HealthRecord } from '../models/HealthRecord';
-
+import type { HealthRecord } from '@/models/HealthRecord';
 export default function RecordsScreen() {
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [searchDate, setSearchDate] = useState('');

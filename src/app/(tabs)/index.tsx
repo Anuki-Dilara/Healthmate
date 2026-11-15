@@ -1,4 +1,6 @@
-import { Link } from 'expo-router';
+import { getAllHealthRecords } from '@/database/healthDatabase';
+import { Link, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -60,6 +62,56 @@ function MetricCard({
 }
 
 export default function HomeScreen() {
+  const [todaySteps, setTodaySteps] = useState(0);
+  const [todayCalories, setTodayCalories] = useState(0);
+  const [todayWater, setTodayWater] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadTodayRecords = async () => {
+        try {
+          const allRecords = await getAllHealthRecords();
+
+          const now = new Date();
+          const today = [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, '0'),
+            String(now.getDate()).padStart(2, '0'),
+          ].join('-');
+
+          const todaysRecords = allRecords.filter(
+            (record) => record.date === today
+          );
+
+          const totals = todaysRecords.reduce(
+            (sum, record) => ({
+              steps: sum.steps + record.steps,
+              calories: sum.calories + record.calories,
+              water: sum.water + record.water,
+            }),
+            { steps: 0, calories: 0, water: 0 }
+          );
+
+          if (isActive) {
+            setTodaySteps(totals.steps);
+            setTodayCalories(totals.calories);
+            setTodayWater(totals.water);
+          }
+        } catch (error) {
+          console.error('Dashboard data loading error:', error);
+        }
+      };
+
+      void loadTodayRecords();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
   const date = new Date();
 
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -128,9 +180,9 @@ export default function HomeScreen() {
           <View style={styles.cardColumn}>
             <MetricCard
               title="Steps"
-              value="5,280"
+              value={todaySteps.toLocaleString()}
               detail="of 8,000 steps"
-              progress={0.66}
+              progress={Math.min(todaySteps / 8000, 1)}
               icon="👟"
               color="#2563EB"
             />
@@ -139,9 +191,9 @@ export default function HomeScreen() {
           <View style={styles.cardColumn}>
             <MetricCard
               title="Water Intake"
-              value="1,250"
+              value={todayWater.toLocaleString()}
               detail="of 2,000 ml"
-              progress={0.625}
+              progress={Math.min(todayWater / 2000, 1)}
               icon="💧"
               color="#0891B2"
             />
@@ -151,9 +203,9 @@ export default function HomeScreen() {
         {}
         <MetricCard
           title="Calories Burned"
-          value="320 kcal"
+          value={`${todayCalories.toLocaleString()} kcal`}
           detail="of 500 kcal daily goal"
-          progress={0.64}
+          progress={Math.min(todayCalories / 500, 1)}
           icon="🔥"
           color="#EA580C"
           wide

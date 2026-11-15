@@ -2,21 +2,20 @@
 import { useState } from 'react';
 
 import {
-    Alert,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { addHealthRecord } from '../database/healthDatabase';
-import type { NewHealthRecord } from '../models/HealthRecord';
-
+import { addHealthRecord } from '@/database/healthDatabase';
+import type { NewHealthRecord } from '@/models/HealthRecord';
 function formatDatabaseDate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
